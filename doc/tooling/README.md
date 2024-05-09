@@ -32,17 +32,71 @@ The following is a collection of short hints on how to do the most essential thi
 
 - How to delay a job until another job is done: 
 
+You can delay a job with the "needs" directive:  
+```yaml
+jobname:
+  needs: 
+    - job: <anotherjob>
+```
+
 - How to change the image used in a task: 
-    
+
+You can change the image used in a task with the "image" directive:  
+```yaml
+jobname:
+  image: <myimage:mytag>
+```
+
 - How do you start a task manually:
+
+```yaml
+jobname:
+  when: manual
+```
 
 - The Script part of the config file - what is it good for?
 
+The script part defines the executed commands in the defined pipeline job
+
+```yaml
+jobname:
+  script:
+    - python -c "print('hello world')"
+```
+
 - If I want a task to run for every branch I put it into the stage ??
+
+I put the job into the commit stage to run it in every branch.
+
+```yaml
+jobname:
+  stage: commit
+```
 
 - If I want a task to run for every merge request I put it into the stage ??
 
+I put the job into the acceptance (testing) stage to run it for every merge request.
+
+```yaml
+jobname:
+  stage: acceptance
+  only:
+    - merge_requests
+    - main
+    - master
+```
+
 - If I want a task to run for every commit to the main branch I put it into the stage ??
+
+I put the job into the release stage to run it for every commit on the main branch.
+
+```yaml
+jobname:
+  stage: release
+  only:
+    - main
+    - master
+```
 
 # flake8 / flakeheaven
 

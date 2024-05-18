@@ -148,10 +148,24 @@ If you like it convenient: Add a button for flake8 to your toolbar!
 # SonarQube
 
 - What is the purpose of SonarQube?
+  - Static Code Analysis / Finding Bugs: SonarQube helps in managing the quality of source code by performing static code analysis.
+  It identifies bugs, vulnerabilities, and code smells in various programming languages.
+  - Improving Maintainability: By highlighting issues, it aids developers in maintaining cleaner, more maintainable codebases.
+  - Enhancing Security: It detects security vulnerabilities that could be exploited, thereby improving the security of the application.
+  - Enforcing Coding Standards: SonarQube ensures that the code adheres to defined coding standards and best practices.
+
 
 - What is the purpose of the quality rules of SonarQube?
 
-- What is the purpose of the quality gates of SonarQube?
+  The quality rules of SonarQube serve as guidelines for code analysis and cover various aspects such as error detection, identification of security vulnerabilities, and elimination of code smells. 
+  By automating the process of issue detection, quality rules help maintain consistency, improve overall code quality, and guide developers towards best practices. 
+  The rules are defined by coding conventions (Python: PEP8).
+
+
+- What is the purpose of the quality gates of SonarQube? 
+  Quality gates in SonarQube serve as checkpoints that determine whether the code meets predefined quality criteria before integration into the main codebase. 
+  They establish standards, prevent the accumulation of technical debt by halting the progression of low-quality code, and facilitate decisions by providing clear guidelines for code promotion or rejection. 
+  Additionally, quality gates enable continuous quality improvement by ensuring consistent quality checks on all code changes and automating quality assurance processes for efficiency and consistency.
 
 
 ## Run SonarLint on your local Computer

@@ -9,8 +9,8 @@ from app.api.v1.endpoints.user.schemas import UserSchema, UserBaseSchema, UserCr
 def user_dict():
     return {
         'id': uuid.uuid4(),
-        'username': 'stjaklar',
-        'password': 's4v3Passw0rd',
+        'username': 'stjaklar',  # NOSONAR
+        'password': 's4v3Passw0rd',  # NOSONAR
     }
 
 

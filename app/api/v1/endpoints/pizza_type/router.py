@@ -46,7 +46,7 @@ def create_pizza_type(
 
     dough = dough_crud.get_dough_by_id(pizza_type.dough_id, db)
     if not dough:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     new_pizza_type = pizza_type_crud.create_pizza_type(pizza_type, db)
     response.status_code = status.HTTP_201_CREATED
@@ -77,7 +77,7 @@ def update_pizza_type(
                 updated_pizza_type = pizza_type_crud.create_pizza_type(changed_pizza_type, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     return updated_pizza_type
 
@@ -90,7 +90,7 @@ def get_pizza_type(
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     return pizza_type
 
@@ -102,7 +102,7 @@ def delete_pizza_type(pizza_type_id: uuid.UUID,
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     pizza_type_crud.delete_pizza_type_by_id(pizza_type_id, db)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -133,7 +133,7 @@ def get_pizza_type_toppings(
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     toppings = pizza_type.toppings
     if join:
@@ -157,10 +157,10 @@ def create_pizza_type_topping(
 ):
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
     if not pizza_type:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     if not topping_crud.get_topping_by_id(topping_quantity.topping_id, db):
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     topping_quantity_found = pizza_type_crud.get_topping_quantity_by_id(pizza_type_id, topping_quantity.topping_id, db)
     if topping_quantity_found:
@@ -184,7 +184,7 @@ def get_pizza_type_dough(
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     dough = pizza_type.dough
 

@@ -63,7 +63,7 @@ def update_dough(
                 updated_dough = dough_crud.create_dough(changed_dough, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     return updated_dough
 
@@ -75,7 +75,7 @@ def get_dough(dough_id: uuid.UUID,
     dough = dough_crud.get_dough_by_id(dough_id, db)
 
     if not dough:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return dough
 
 
@@ -84,7 +84,7 @@ def delete_dough(dough_id: uuid.UUID, db: Session = Depends(get_db)):
     dough = dough_crud.get_dough_by_id(dough_id, db)
 
     if not dough:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     dough_crud.delete_dough_by_id(dough_id, db)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

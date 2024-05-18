@@ -48,7 +48,7 @@ def update_user(
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     else:
         logging.error('User {} not found'.format(user_id))
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
 
 @router.get('/{user_id}', response_model=UserSchema, tags=['user'])
@@ -58,7 +58,7 @@ def get_user(user_id: uuid.UUID,
     user_found = user_crud.get_user_by_id(user_id, db)
 
     if not user_found:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     return user_found
 
@@ -71,7 +71,7 @@ def delete_user(
     user_found = user_crud.get_user_by_id(user_id, db)
 
     if not user_found:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     user_crud.delete_user_by_id(user_id, db)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

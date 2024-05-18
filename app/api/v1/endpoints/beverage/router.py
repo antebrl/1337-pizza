@@ -64,7 +64,7 @@ def update_beverage(
                 updated_beverage = beverage_crud.create_beverage(changed_beverage, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     return updated_beverage
 
@@ -77,7 +77,7 @@ def get_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     return beverage
 
@@ -89,7 +89,7 @@ def delete_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     beverage_crud.delete_beverage_by_id(beverage_id, db)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

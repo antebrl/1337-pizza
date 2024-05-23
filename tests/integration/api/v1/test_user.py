@@ -14,7 +14,6 @@ def db():
         db.close()
 
 
-
 def test_user_create_read_delete(db):
     new_user_name = 'test'
     number_of_users_before = len(user_crud.get_all_users(db))

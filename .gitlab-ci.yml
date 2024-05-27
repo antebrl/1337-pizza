@@ -252,3 +252,36 @@ migrate_database_in_production:
       - master
   except:
     - schedules
+
+integration_testing:
+  stage: commit
+  image:
+    name: $CI_REGISTRY_IMAGE/$DEVELOPMENT_CONTAINER_NAME:$DEVELOPMENT_CONTAINER_TAG
+    entrypoint: [ "" ]
+  services:
+    - name:  postgres:15.0-alpine
+      alias:  db-dev
+  variables:
+    DATABASE_HOST: db-dev # Should be the same name as the 'alias' in the service section
+    DATABASE_PORT: 5432
+    DATABASE_USERNAME: postgres
+    DATABASE_PASSWORD: mysecretpassword
+    DATABASE_NAME: postgres
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: mysecretpassword
+    POSTGRES_DB: postgres
+  needs:
+    - create_development_container_image
+  before_script:
+    - PYTHONPATH=. alembic upgread head
+  script:
+    - PYTHONPATH=. pytest -x --junitxml=report_integration_tests.xml tests/integration/
+  allow_failure: false
+  artifacts:
+    reports:
+      junit: report_integration_tests.xml
+  only:
+    - branches
+    - merge_requests
+    - master
+    - main

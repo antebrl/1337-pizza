@@ -276,7 +276,6 @@ integration_testing:
     - PYTHONPATH=. alembic upgread head
   script:
     - PYTHONPATH=. pytest -x --junitxml=report_integration_tests.xml tests/integration/
-  allow_failure: false
   artifacts:
     reports:
       junit: report_integration_tests.xml

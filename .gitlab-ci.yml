@@ -184,6 +184,8 @@ sonarqube-check:
   script: 
     - sonar-scanner
   allow_failure: true
+  needs:
+    - integration_testing
   only:
     - branches
     - merge_requests
@@ -275,10 +277,12 @@ integration_testing:
   before_script:
     - PYTHONPATH=. alembic upgrade head
   script:
-    - PYTHONPATH=. pytest -x --junitxml=report_integration_tests.xml tests/integration/
+    - PYTHONPATH=. pytest -x --junitxml=report_integration_tests.xml --cov=app --cov-config=.coveragerc --cov-report=xml:integration_coverage.xml tests/integration/
   artifacts:
     reports:
       junit: report_integration_tests.xml
+    paths:
+      - integration_coverage.xml
   only:
     - branches
     - merge_requests

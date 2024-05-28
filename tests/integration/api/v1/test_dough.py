@@ -90,6 +90,6 @@ def test_dough_create_read_update_delete(db):
     doughs = dough_crud.get_all_doughs(db)
     assert len(doughs) == number_of_doughs_before
 
-    # Assert: Correct user was deleted
+    # Assert: Correct dough was deleted
     dough = dough_crud.get_dough_by_id(created_dough_id, db)
     assert dough is None

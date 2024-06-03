@@ -297,7 +297,7 @@ service_testing:
   needs:
     - migrate_database_in_staging
   variables:
-    API_SERVER: http://mo4-red.se-ss24.users.h-da.cloud
+    API_SERVER: $team_instance_link
     API_PORT: 30080
   before_script:
     - pip install pytest-pspec

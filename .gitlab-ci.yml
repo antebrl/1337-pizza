@@ -288,3 +288,21 @@ integration_testing:
     - merge_requests
     - master
     - main
+  
+service_testing:
+  stage: acceptance
+  image:
+    name: $CI_REGISTRY_IMAGE/$DEVELOPMENT_CONTAINER_NAME:$DEVELOPMENT_CONTAINER_TAG
+    entrypoint: [ "" ]
+  needs:
+    - migrate_database_in_staging
+  variables:
+    API_SERVER: http://mo4-red.se-ss24.users.h-da.cloud
+    API_PORT: 30080 
+  script:
+    - PYTHONPATH=. pytest --pspec --verbose --color=yes --junitxml=report_service_tests.xml tests/service/
+  allow_failure: false
+  only:
+    - merge_requests
+    - main
+    - master

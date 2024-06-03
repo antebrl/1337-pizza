@@ -298,9 +298,10 @@ service_testing:
     - migrate_database_in_staging
   variables:
     API_SERVER: http://mo4-red.se-ss24.users.h-da.cloud
-    API_PORT: 30080 
-  script:
+    API_PORT: 30080
+  before_script:
     - pip install pspec
+  script:
     - PYTHONPATH=. pytest --pspec --verbose --color=yes --junitxml=report_service_tests.xml tests/service/
   allow_failure: false
   only:

@@ -31,6 +31,7 @@ def db():
 def test_dough_create_read_update_delete(db):
     clear_db(db)
     number_of_orders_before = len(order_crud.get_all_orders(db))
+    test_description = 'test description'
 
     # Arrange: Instantiate all components
 
@@ -43,7 +44,7 @@ def test_dough_create_read_update_delete(db):
     dough = dough_crud.create_dough(dough_schema, db)
 
     # Instantiate a topping
-    topping_schema = ToppingCreateSchema(name='test topping', price=1, stock=2, description='test description')
+    topping_schema = ToppingCreateSchema(name='test topping', price=1, stock=2, description=test_description)
     topping = topping_crud.create_topping(topping_schema, db)
 
     # Instantiate a Pizza_type
@@ -55,7 +56,7 @@ def test_dough_create_read_update_delete(db):
     pizza_type = pizza_type_crud.create_pizza_type(pizza_type_schema, db)
 
     # Instantiate a beverage
-    beverage_schema = BeverageCreateSchema(name='test beverage', stock=2, price=1, description='test description')
+    beverage_schema = BeverageCreateSchema(name='test beverage', stock=2, price=1, description=test_description)
     # Add beverage to database
     beverage = beverage_crud.create_beverage(beverage_schema, db)
 
@@ -64,7 +65,7 @@ def test_dough_create_read_update_delete(db):
         name='test beverage 2',
         stock=2,
         price=2,
-        description='test description',
+        description=test_description,
     )
     second_beverage = beverage_crud.create_beverage(second_beverage_schema, db)
 

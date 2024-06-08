@@ -61,8 +61,8 @@ stages:
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/00000000-0000-0000-0000-000000000000
       method: GET
-      response:
-        status_code: 404
+    response:
+      status_code: 404
 
   - name: Read - Get a list of beverages
     request:
@@ -113,10 +113,10 @@ stages:
       json:
         <<: *cola_beverage
         name: "Sprite"
-      response:
-        status_code: 303
-        headers:
-          location: "http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/{sprite_id}"
+    response:
+      status_code: 303
+      headers:
+        location: "http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/{beverage_id2}"
 
   - name: Edge Update - Check for status 404 if we update with a non existing id
     request:
@@ -125,8 +125,8 @@ stages:
       json:
         <<: *cola_beverage
         name: "Sprite"
-      response:
-        status_code: 404
+    response:
+      status_code: 404
 
 
   # Check deleting beverages
@@ -149,5 +149,5 @@ stages:
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/00000000-0000-0000-0000-000000000000
       method: DELETE
-      response:
-        status_code: 404
+    response:
+      status_code: 404

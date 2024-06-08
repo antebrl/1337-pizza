@@ -74,7 +74,6 @@ flake8_checking:
     entrypoint: [ "" ]
   script:
     - flakeheaven lint app/ tests/
-  allow_failure: true
   only:
     - branches
     - merge_requests
@@ -182,7 +181,6 @@ sonarqube-check:
       - .sonar/cache
   script: 
     - sonar-scanner
-  allow_failure: true
   needs:
     - integration_testing
   only:

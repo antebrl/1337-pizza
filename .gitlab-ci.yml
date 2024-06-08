@@ -123,7 +123,6 @@ deploy_application_to_staging:
       - main
       - merge_requests
       - master
-  when: manual
   except:
     - schedules
 
@@ -211,7 +210,6 @@ deploy_application_to_production:
     refs:
       - main
       - master
-  when: manual
   except:
     - schedules
 

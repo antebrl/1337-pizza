@@ -1,5 +1,6 @@
-import uuid
 import logging
+import uuid
+
 from sqlalchemy.orm import Session
 
 from app.api.v1.endpoints.pizza_type.schemas import (
@@ -11,9 +12,24 @@ from app.database.models import PizzaType, PizzaTypeToppingQuantity
 
 def create_pizza_type(schema: PizzaTypeCreateSchema, db: Session):
     entity = PizzaType(**schema.dict())
-    db.add(entity)
-    db.commit()
-    logging.info('PizzaType created with ID {}; name {}'.format(entity.id, entity.name))
+    if not entity:
+        logging.warning('PizzaType object is empty')
+    logging.info(
+        'Trying to create PizzaType ID {}; name {}; description {}'
+        .format(entity.id, entity.name, entity.description))
+    try:
+        db.add(entity)
+        db.commit()
+        logging.info(
+            f'PizzaType ID {entity.id}; name {entity.name}; description {entity.description} stored successfully in '
+            f'the database.')
+    except Exception as e:
+        logging.error(
+            f'An error occurred while storing PizzaType ID {entity.id}; name {entity.name}; description '
+            f'{entity.description} in the database: Error {e}')
+    logging.info(
+        'PizzaType created with ID {}; name {}; description {}'
+        .format(entity.id, entity.name, entity.description))
     return entity
 
 
@@ -39,8 +55,11 @@ def update_pizza_type(pizza_type: PizzaType, changed_pizza_type: PizzaTypeCreate
     for key, value in changed_pizza_type.dict().items():
         setattr(pizza_type, key, value)
 
-    db.commit()
-    db.refresh(pizza_type)
+    try:
+        db.commit()
+        db.refresh(pizza_type)
+    except Exception as e:
+        logging.error(f'PizzaType with ID {pizza_type.id} could not be updated. Error: {e}')
     logging.info('PizzaType with ID {} updated'.format(pizza_type.id))
     return pizza_type
 
@@ -61,10 +80,11 @@ def create_topping_quantity(
         db: Session,
 ):
     entity = PizzaTypeToppingQuantity(**schema.dict())
+    logging.info('Trying to create PizzaTypeToppingQuantity created for PizzaType ID {}'.format(pizza_type.id))
     pizza_type.toppings.append(entity)
     db.commit()
     db.refresh(pizza_type)
-    logging.info('Topping quantity created for PizzaType ID {}'.format(pizza_type.id))
+    logging.info('PizzaTypeToppingQuantity created for PizzaType ID {}'.format(pizza_type.id))
     return entity
 
 

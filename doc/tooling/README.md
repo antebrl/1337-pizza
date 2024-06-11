@@ -100,11 +100,19 @@ jobname:
 
 # flake8 / flakeheaven
 
-- What is the purpose of flake8?
+- What is the purpose of flake8?  
+The purpose of flake8 is to analyze Python code for potential errors, enforce coding standards, and promote code consistency. It acts as a linting tool  to provide a comprehensive analysis of Python code.
+
 
 - What types of problems does it detect
 
+1. Syntax errors
+2. Unused imports and variables
+3. Violations of PEP 8 style guidelines (e.g., indentation, line length, naming conventions)
+
 - Why should you use a tool like flake8 in a serious project?
+
+Using a tool like Flake8 in a serious project ensures consistent code style, detects potential errors, and promotes best practices, enhancing code quality and maintainability.
 
 ## Run flake8 on your local Computer
 
@@ -136,14 +144,36 @@ If you like it convenient: Add a button for flake8 to your toolbar!
 
 - What is the purpose of GrayLog?
 
+The purpose of GrayLog is to provide a centralized platform for log management and analysis. It allows organizations to collect, index, and analyze log data from various sources such as applications, servers, and network devices. GrayLog helps in troubleshooting issues, monitoring system performance, and detecting anomalies by providing powerful search capabilities and visualization tools.
+
 - What logging levels are available?
+ 
+0 Emergency: system is unusable  
+1 Alert: action must be taken immediately  
+2 Critical: critical conditions  
+3 Error: error conditions  
+4 Warning: warning conditions  
+5 Notice: normal but significant condition  
+6 Informational: informational messages  
+7 Debug: debug-level messages
 
 - What is the default logging level?
 
-- Give 3-4 examples for logging commands in Python:
-  ```python
+The default logging level is info.
 
-  ```
+- Give 3-4 examples for logging commands in Python:
+```python
+import logging
+
+# Example 1: Logging a debug message
+logging.debug('This is a debug message')
+
+# Example 2: Logging an error message
+logging.error('This is an error message')
+
+# Example 3: Logging a warning message with formatting
+logging.warning('User %s attempted to access %s', 'admin', '/admin-panel')
+```
 
 # SonarQube
 

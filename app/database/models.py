@@ -4,7 +4,7 @@ import enum
 import uuid
 from typing import List
 
-from sqlalchemy import CheckConstraint, ForeignKey, Integer, Numeric, DateTime, String
+from sqlalchemy import CheckConstraint, ForeignKey, Integer, Numeric, DateTime, Text
 from sqlalchemy.orm import relationship, mapped_column, Mapped, DeclarativeBase
 from sqlalchemy.sql import func
 
@@ -32,7 +32,7 @@ class PizzaType(Base):
 
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
     price: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
-    description: Mapped[str] = mapped_column(String(30), nullable=False, default='')
+    description: Mapped[str] = mapped_column(Text, nullable=False, default='')
 
     dough_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('dough.id'), nullable=False)
     dough: Mapped['Dough'] = relationship()

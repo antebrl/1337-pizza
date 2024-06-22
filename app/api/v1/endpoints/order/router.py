@@ -14,7 +14,7 @@ import app.api.v1.endpoints.user.crud as user_crud
 from app.api.v1.endpoints.order.schemas \
     import OrderSchema, PizzaCreateSchema, JoinedPizzaPizzaTypeSchema, \
     PizzaWithoutPizzaTypeSchema, OrderBeverageQuantityCreateSchema, JoinedOrderBeverageQuantitySchema, \
-    OrderPriceSchema, OrderBeverageQuantityBaseSchema, OrderCreateSchema
+    OrderPriceSchema, OrderBeverageQuantityBaseSchema, OrderCreateSchema, OrderUpdateOrderStatusSchema
 from app.api.v1.endpoints.user.schemas import UserSchema
 from app.database.connection import SessionLocal
 
@@ -338,3 +338,20 @@ def get_user_of_order(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     user = order.user
     return user
+
+
+@router.put('/{order_id}/status',
+            response_model=OrderSchema,
+            tags=['order'],
+            )
+def update_order_status(
+    order_id: uuid.UUID,
+    order_status_schema: OrderUpdateOrderStatusSchema,
+    db: Session = Depends(get_db),
+):
+    order = order_crud.get_order_by_id(order_id, db)
+    if not order:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    updated_order = order_crud.update_order_status(order, order_status_schema.order_status, db)
+    return updated_order

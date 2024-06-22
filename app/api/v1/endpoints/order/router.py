@@ -14,7 +14,7 @@ import app.api.v1.endpoints.user.crud as user_crud
 from app.api.v1.endpoints.order.schemas \
     import OrderSchema, PizzaCreateSchema, JoinedPizzaPizzaTypeSchema, \
     PizzaWithoutPizzaTypeSchema, OrderBeverageQuantityCreateSchema, JoinedOrderBeverageQuantitySchema, \
-    OrderPriceSchema, OrderBeverageQuantityBaseSchema, OrderCreateSchema, OrderUpdateOrderStatusSchema
+    OrderPriceSchema, OrderBeverageQuantityBaseSchema, OrderCreateSchema, OrderStatus, OrderUpdateOrderStatusSchema
 from app.api.v1.endpoints.user.schemas import UserSchema
 from app.database.connection import SessionLocal
 
@@ -31,9 +31,10 @@ def get_db():
 
 @router.get('', response_model=List[OrderSchema], tags=['order'])
 def get_all_orders(
+        order_status: Optional[OrderStatus] = None,
         db: Session = Depends(get_db),
 ):
-    orders = order_crud.get_all_orders(db)
+    orders = order_crud.get_all_orders(db, order_status)
     return orders
 
 

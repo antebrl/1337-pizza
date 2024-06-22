@@ -73,6 +73,18 @@ stages:
           extra_kwargs:
             element_id: "{order_id}"
 
+  #Get all Orders with Order Status
+  - name: Get a list of orders with Order Status
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order?order_status=TRANSMITTED
+      method: GET
+    response:
+      status_code: 200
+      verify_response_with:
+        - function: tests.service.api.v1.order.testing_utils:check_for_id_in_response_list
+          extra_kwargs:
+            element_id: "{order_id}"
+
   #Get wrong Order
   - name: Check for status 404 if we try to get an order with a wrong id
     request:

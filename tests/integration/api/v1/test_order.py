@@ -80,6 +80,16 @@ def test_dough_create_read_update_delete(db):
     order_schema = OrderCreateSchema(address=address, user_id=user.id)
     order = order_crud.create_order(order_schema, db)
 
+    # Act: Update the order status
+    updated_order = order_crud.update_order_status(order, OrderStatus.PREPARING, db)
+
+    # Assert: Check if the status has been updated correctly
+    assert updated_order.order_status == OrderStatus.PREPARING
+
+    # Retrieve the order and check the status
+    resolved_order = order_crud.get_order_by_id(order.id, db)
+    assert resolved_order.order_status == OrderStatus.PREPARING
+
     orders = order_crud.get_all_orders(db)
     assert len(orders) == number_of_orders_before + 1
 
@@ -96,11 +106,6 @@ def test_dough_create_read_update_delete(db):
     assert order.address_id == resolved_order.address_id
     assert order.beverages == resolved_order.beverages
     assert order.pizzas == resolved_order.pizzas
-
-    order_crud.update_order_status(order, OrderStatus.PREPARING, db)
-    resolved_order = order_crud.get_order_by_id(order.id, db)
-
-    assert resolved_order.order_status == OrderStatus.PREPARING
 
     pizzas_in_order_before = len(order_crud.get_all_pizzas_of_order(order, db))
     pizza = order_crud.add_pizza_to_order(order, pizza_type, db)

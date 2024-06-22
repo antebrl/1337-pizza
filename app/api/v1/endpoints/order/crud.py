@@ -1,6 +1,6 @@
 import uuid
 import logging
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -30,7 +30,9 @@ def get_order_by_id(order_id: uuid.UUID, db: Session):
     return entity
 
 
-def get_all_orders(db: Session):
+def get_all_orders(db: Session, status: Optional[OrderStatus] = None):
+    if status:
+        return db.query(Order).filter(Order.order_status == status).all()
     return db.query(Order).all()
 
 

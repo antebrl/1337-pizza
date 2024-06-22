@@ -31,6 +31,7 @@ def db():
 def test_dough_create_read_update_delete(db):
     clear_db(db)
     number_of_orders_before = len(order_crud.get_all_orders(db))
+    number_of_orders_preparing_before = len(order_crud.get_all_orders(db, OrderStatus.PREPARING))
     test_description = 'test description'
 
     # Arrange: Instantiate all components
@@ -89,6 +90,9 @@ def test_dough_create_read_update_delete(db):
     # Retrieve the order and check the status
     resolved_order = order_crud.get_order_by_id(order.id, db)
     assert resolved_order.order_status == OrderStatus.PREPARING
+
+    orders = order_crud.get_all_orders(db, OrderStatus.PREPARING)
+    assert len(orders) == number_of_orders_preparing_before + 1
 
     orders = order_crud.get_all_orders(db)
     assert len(orders) == number_of_orders_before + 1

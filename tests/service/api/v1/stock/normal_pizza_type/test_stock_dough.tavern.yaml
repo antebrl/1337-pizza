@@ -5,6 +5,7 @@ test_name: Make sure server implements stock logic for dough
 includes:
   - !include common.yaml
   - !include ../../order/order_stage.yaml
+  - !include ../../sauce/sauce_stage.yaml
   - !include ../../pizza_type/pizza_type_stage.yaml
   - !include ../../users/user_stage.yaml
 
@@ -17,6 +18,9 @@ stages:
   #Create Order
   - type: ref
     id: create_order
+
+  - type: ref
+    id: create_sauce
 
 
 #--------------------Create everything needed for a Pizza-------------------------------
@@ -154,3 +158,6 @@ stages:
       method: DELETE
     response:
       status_code: 204
+
+  - type: ref
+    id: delete_sauce

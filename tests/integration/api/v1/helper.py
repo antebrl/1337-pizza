@@ -5,6 +5,7 @@ import app.api.v1.endpoints.dough.crud as dough_crud
 import app.api.v1.endpoints.pizza_type.crud as pizza_type_crud
 import app.api.v1.endpoints.beverage.crud as beverage_crud
 import app.api.v1.endpoints.topping.crud as topping_crud
+import app.api.v1.endpoints.sauce.crud as sauce_crud
 
 
 def clear_db(db):
@@ -24,6 +25,7 @@ def clear_db(db):
     pizza_types = pizza_type_crud.get_all_pizza_types(db)
     orders = order_crud.get_all_orders(db)
     toppings = topping_crud.get_all_toppings(db)
+    sauces = sauce_crud.get_all_sauces(db)
     # delete all pizzas due to foreign constraint
     for order in orders:
         pizzas = order_crud.get_all_pizzas_of_order(order, db)
@@ -38,6 +40,8 @@ def clear_db(db):
     # delete doughs
     for dou in doughs:
         dough_crud.delete_dough_by_id(dou.id, db)
+    for sauce in sauces:
+        sauce_crud.delete_sauce_by_id(sauce.id, db)
 
     # delete all beverages
     beverages = beverage_crud.get_all_beverages(db)

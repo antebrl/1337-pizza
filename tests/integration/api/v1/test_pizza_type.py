@@ -8,9 +8,11 @@ import app.api.v1.endpoints.order.stock_logic.stock_ingredients_crud as stock_in
 import app.api.v1.endpoints.topping.crud as topping_crud
 from app.api.v1.endpoints.dough.schemas import DoughCreateSchema
 from app.api.v1.endpoints.pizza_type.schemas import PizzaTypeCreateSchema, PizzaTypeToppingQuantityCreateSchema
+from app.api.v1.endpoints.sauce.schemas import SauceCreateSchema, SpiceLevel
 from app.api.v1.endpoints.topping.schemas import ToppingCreateSchema
 from app.database.connection import SessionLocal
 from tests.integration.api.v1.helper import clear_db
+import app.api.v1.endpoints.sauce.crud as sauce_crud
 
 
 @pytest.fixture(scope='module')
@@ -65,9 +67,27 @@ def test_pizza_type_create_read_update_delete(db):
     new_pizza_type_price = Decimal('1.10')
     new_pizza_type_description = 'This is a nice pizza'
 
+    sauce_name = 'sauce_test'
+    sauce_description = 'test description'
+    sauce_stock = 1
+    sauce_price = Decimal('1.23')
+    # Instantiate a sauce
+    sauce = SauceCreateSchema(
+        name=sauce_name,
+        stock=sauce_stock,
+        description=sauce_description,
+        price=sauce_price,
+        spice=SpiceLevel.MEDIUM,
+    )
+
+    # Add sauce to database
+    sauce = sauce_crud.create_sauce(sauce, db)
+    sauce_id = sauce.id
+
     # Arrange: Instantiate a pizza type
     pizza_type = PizzaTypeCreateSchema(
         dough_id=new_pizza_type_dough_id,
+        sauce_ids=[sauce_id],
         name=new_pizza_type_name,
         price=new_pizza_type_price,
         description=new_pizza_type_description,
@@ -89,6 +109,7 @@ def test_pizza_type_create_read_update_delete(db):
     assert pizza_type.description == new_pizza_type_description
     assert pizza_type.price == new_pizza_type_price
     assert pizza_type.dough_id == new_pizza_type_dough_id
+    assert pizza_type.sauces[0].sauce_id == sauce_id
 
     # Act: Get if ingredients are available for pizza type
     ingredients_available = stock_ingredients_crud.ingredients_are_available(pizza_type)
@@ -122,10 +143,12 @@ def test_pizza_type_create_read_update_delete(db):
     assert pizza_type.description == new_pizza_type_description
     assert pizza_type.price == new_pizza_type_price
     assert pizza_type.dough_id == new_pizza_type_dough_id
+    assert pizza_type.sauces[0].sauce_id == sauce_id
 
     # Act: Change pizza type price
     changed_pizza_type = PizzaTypeCreateSchema(
         dough_id=new_pizza_type_dough_id,
+        sauce_ids=[sauce_id],
         name=new_pizza_type_name,
         price=changed_pizza_type_price,
         description=new_pizza_type_description,
@@ -232,3 +255,6 @@ def test_pizza_type_create_read_update_delete(db):
 
     # Act: Delete topping
     topping_crud.delete_topping_by_id(created_topping_id, db)
+
+    # Act: Delete sauce
+    sauce_crud.delete_sauce_by_id(sauce_id, db)

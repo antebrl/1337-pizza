@@ -1,5 +1,6 @@
 import logging
 import uuid
+from decimal import Decimal
 
 from sqlalchemy.orm import Session
 
@@ -7,11 +8,16 @@ from app.api.v1.endpoints.pizza_type.schemas import (
     PizzaTypeCreateSchema,
     PizzaTypeToppingQuantityCreateSchema,
 )
-from app.database.models import PizzaType, PizzaTypeToppingQuantity
+from app.database.models import PizzaType, PizzaTypeToppingQuantity, PizzaTypeSauce
 
 
 def create_pizza_type(schema: PizzaTypeCreateSchema, db: Session):
-    entity = PizzaType(**schema.dict())
+    entity = PizzaType(
+        name=schema.name,
+        price=Decimal(str(schema.price)),
+        description=schema.description,
+        dough_id=schema.dough_id)
+
     if not entity:
         logging.warning('PizzaType object is empty')
     logging.info(
@@ -20,9 +26,17 @@ def create_pizza_type(schema: PizzaTypeCreateSchema, db: Session):
     try:
         db.add(entity)
         db.commit()
+
         logging.info(
             f'PizzaType ID {entity.id}; name {entity.name}; description {entity.description} stored successfully in '
             f'the database.')
+
+        # Associate sauces with PizzaType
+        for sauce_id in schema.sauce_ids:
+            pizza_type_sauce = PizzaTypeSauce(pizza_type_id=entity.id, sauce_id=sauce_id)
+            db.add(pizza_type_sauce)
+
+        db.commit()
     except Exception as e:
         logging.error(
             f'An error occurred while storing PizzaType ID {entity.id}; name {entity.name}; description '

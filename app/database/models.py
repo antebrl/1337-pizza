@@ -8,6 +8,8 @@ from sqlalchemy import CheckConstraint, ForeignKey, Integer, Numeric, DateTime, 
 from sqlalchemy.orm import relationship, mapped_column, Mapped, DeclarativeBase
 from sqlalchemy.sql import func
 
+PIZZA_TYPE_ID = 'pizza_type.id'
+
 STOCK_NON_NEGATIVE_CONSTRAINT = 'stock >= 0'
 CASCADE_ALL_DELETE_ORPHAN = 'all, delete-orphan'
 
@@ -42,8 +44,12 @@ class PizzaType(Base):
 
     dough_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('dough.id'), nullable=False)
     dough: Mapped['Dough'] = relationship()
-    toppings: Mapped[List['PizzaTypeToppingQuantity']] = relationship(cascade=CASCADE_ALL_DELETE_ORPHAN,
-                                                                      back_populates='pizza_type')
+
+    sauces: Mapped[List['PizzaTypeSauce']] = relationship(
+        cascade=CASCADE_ALL_DELETE_ORPHAN, back_populates='pizza_type')
+
+    toppings: Mapped[List['PizzaTypeToppingQuantity']] = relationship(
+        cascade=CASCADE_ALL_DELETE_ORPHAN, back_populates='pizza_type')
     type: Mapped[str] = mapped_column(nullable=True)
 
     __mapper_args__ = {
@@ -59,7 +65,7 @@ class PizzaType(Base):
 class PizzaTypeToppingQuantity(Base):
     __tablename__ = 'pizza_type_topping_quantity'
 
-    pizza_type_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('pizza_type.id'), primary_key=True)
+    pizza_type_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(PIZZA_TYPE_ID), primary_key=True)
     pizza_type: Mapped['PizzaType'] = relationship(back_populates='toppings')
     topping_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('topping.id'), primary_key=True)
     quantity: Mapped[uuid.UUID] = mapped_column(Integer, CheckConstraint('quantity > 0'), nullable=False)
@@ -68,6 +74,19 @@ class PizzaTypeToppingQuantity(Base):
     def __repr__(self):
         return "PizzaTypeToppingQuantity(pizza_type_id='%s', topping_id='%s', quantity='%s')" \
             % (self.pizza_type_id, self.topping_id, self.quantity)
+
+
+class PizzaTypeSauce(Base):
+    __tablename__ = 'pizza_type_sauce'
+
+    pizza_type_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(PIZZA_TYPE_ID), primary_key=True)
+    pizza_type: Mapped['PizzaType'] = relationship(back_populates='sauces')
+    sauce_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('sauce.id'), primary_key=True)
+    sauce: Mapped['Sauce'] = relationship()
+
+    def __repr__(self):
+        return "PizzaTypeToppingQuantity(pizza_type_id='%s', sauce_id='%s')" \
+            % (self.pizza_type_id, self.sauce_id)
 
 
 class Topping(Base):
@@ -150,7 +169,7 @@ class Pizza(Base):
     __tablename__ = 'pizza'
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    pizza_type_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('pizza_type.id'), nullable=False)
+    pizza_type_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(PIZZA_TYPE_ID), nullable=False)
     pizza_type: Mapped['PizzaType'] = relationship()
     order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('customer_order.id'), nullable=True)
 

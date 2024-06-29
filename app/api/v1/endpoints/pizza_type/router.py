@@ -13,7 +13,7 @@ from app.api.v1.endpoints.pizza_type.schemas import \
     JoinedPizzaTypeQuantitySchema, \
     PizzaTypeSchema, \
     PizzaTypeCreateSchema, \
-    PizzaTypeToppingQuantityCreateSchema
+    PizzaTypeToppingQuantityCreateSchema, PizzaTypeSauceSchema
 from app.database.connection import SessionLocal
 
 router = APIRouter()
@@ -115,6 +115,7 @@ MyPyEitherItem = TypeVar(
     'MyPyEitherItem',
     List[PizzaTypeToppingQuantityCreateSchema],
     List[JoinedPizzaTypeQuantitySchema],
+    List[PizzaTypeSauceSchema],
     None,
 )
 
@@ -140,6 +141,24 @@ def get_pizza_type_toppings(
         toppings = pizza_type_crud.get_joined_topping_quantities_by_pizza_type(pizza_type.id, db)
 
     return toppings
+
+
+@router.get(
+    '/{pizza_type_id}/sauces',
+    response_model=MyPyEitherItem,
+    tags=['pizza_type'],
+)
+def get_pizza_type_sauces(
+        pizza_type_id: uuid.UUID,
+        response: Response,
+        db: Session = Depends(get_db),
+):
+    pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
+
+    if not pizza_type:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    return pizza_type.sauces
 
 
 @router.post(

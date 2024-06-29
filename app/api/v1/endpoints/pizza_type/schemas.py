@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 
 from pydantic import BaseModel
 
@@ -16,6 +17,7 @@ class PizzaTypeBaseSchema(BaseModel):
 
 class PizzaTypeCreateSchema(PizzaTypeBaseSchema):
     dough_id: uuid.UUID
+    sauce_ids: List[uuid.UUID]
 
 
 class PizzaTypeSchema(PizzaTypeBaseSchema):
@@ -31,6 +33,13 @@ class PizzaTypeToppingQuantityBaseSchema(BaseModel):
 
 class PizzaTypeToppingQuantityCreateSchema(PizzaTypeToppingQuantityBaseSchema):
     topping_id: uuid.UUID
+
+
+class PizzaTypeSauceSchema(BaseModel):
+    sauce_id: uuid.UUID
+
+    class Config:
+        orm_mode = True
 
 
 class JoinedPizzaTypeQuantitySchema(PizzaTypeBaseSchema, ToppingBaseSchema):

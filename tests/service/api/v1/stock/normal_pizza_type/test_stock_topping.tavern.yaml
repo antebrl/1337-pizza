@@ -5,6 +5,7 @@ test_name: Make sure server implements stock logic for topping
 includes:
   - !include common.yaml
   - !include ../../order/order_stage.yaml
+  - !include ../../sauce/sauce_stage.yaml
   - !include ../../pizza_type/pizza_type_stage.yaml
   - !include ../../dough/dough_stage.yaml
   - !include ../../users/user_stage.yaml
@@ -24,6 +25,9 @@ stages:
   #Create Dough with 0 stock
   - type: ref
     id: create_dough
+
+  - type: ref
+    id: create_sauce
 
   #Create pizza_type
   - type: ref
@@ -167,6 +171,9 @@ stages:
   #Delete dough
   - type: ref
     id: delete_dough
+
+  - type: ref
+    id: delete_sauce
 
   #Delete Topping
   - name: Delete topping

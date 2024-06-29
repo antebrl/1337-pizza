@@ -1,0 +1,11 @@
+---
+
+name: Common
+description: common test information
+
+variables:
+  sauce_name: "Marinara"
+  sauce_description: "Test Sauce"
+  sauce_stock: 10
+  sauce_price: 1.50
+  sauce_spice: "MEDIUM"

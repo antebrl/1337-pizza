@@ -1,4 +1,6 @@
 import uuid
+from decimal import Decimal
+
 import pytest
 
 import app.api.v1.endpoints.dough.crud as dough_crud
@@ -7,6 +9,7 @@ from app.api.v1.endpoints.dough.schemas import DoughCreateSchema
 from app.api.v1.endpoints.order.address.schemas import AddressCreateSchema
 from app.api.v1.endpoints.order.schemas import OrderCreateSchema, OrderStatus
 from app.api.v1.endpoints.pizza_type.schemas import PizzaTypeCreateSchema
+from app.api.v1.endpoints.sauce.schemas import SauceCreateSchema, SpiceLevel
 from app.api.v1.endpoints.topping.schemas import ToppingCreateSchema
 from app.api.v1.endpoints.user.schemas import UserCreateSchema
 from app.database.connection import SessionLocal
@@ -16,6 +19,7 @@ import app.api.v1.endpoints.topping.crud as topping_crud
 import app.api.v1.endpoints.order.address.crud as address_crud
 import app.api.v1.endpoints.pizza_type.crud as pizza_type_crud
 import app.api.v1.endpoints.order.crud as order_crud
+import app.api.v1.endpoints.sauce.crud as sauce_crud
 from tests.integration.api.v1.helper import clear_db
 
 
@@ -33,6 +37,10 @@ def test_dough_create_read_update_delete(db):
     number_of_orders_before = len(order_crud.get_all_orders(db))
     number_of_orders_preparing_before = len(order_crud.get_all_orders(db, OrderStatus.PREPARING))
     test_description = 'test description'
+    sauce_name = 'sauce_test'
+    sauce_description = 'test description'
+    sauce_stock = 1
+    sauce_price = Decimal('1.23')
 
     # Arrange: Instantiate all components
 
@@ -44,6 +52,19 @@ def test_dough_create_read_update_delete(db):
     dough_schema = DoughCreateSchema(name='test dough', price=1, description='test dough description', stock=2)
     dough = dough_crud.create_dough(dough_schema, db)
 
+    # Instantiate a sauce
+    sauce = SauceCreateSchema(
+        name=sauce_name,
+        stock=sauce_stock,
+        description=sauce_description,
+        price=sauce_price,
+        spice=SpiceLevel.MEDIUM,
+    )
+
+    # Add sauce to database
+    sauce = sauce_crud.create_sauce(sauce, db)
+    sauce_id = sauce.id
+
     # Instantiate a topping
     topping_schema = ToppingCreateSchema(name='test topping', price=1, stock=2, description=test_description)
     topping = topping_crud.create_topping(topping_schema, db)
@@ -53,7 +74,8 @@ def test_dough_create_read_update_delete(db):
         name='update_pizza_type',
         price=5,
         description='update_pizza_type description',
-        dough_id=dough.id)
+        dough_id=dough.id,
+        sauce_ids=[sauce_id])
     pizza_type = pizza_type_crud.create_pizza_type(pizza_type_schema, db)
 
     # Instantiate a beverage
@@ -139,4 +161,5 @@ def test_dough_create_read_update_delete(db):
     pizza_type_crud.delete_pizza_type_by_id(pizza_type.id, db)
     topping_crud.delete_topping_by_id(topping.id, db)
     dough_crud.delete_dough_by_id(dough.id, db)
+    sauce_crud.delete_sauce_by_id(sauce_id, db)
     user_crud.delete_user_by_id(user.id, db)

@@ -18,3 +18,6 @@ The following is a brief description of the folder structure of this project:
 - **doc** - all documentation of the project - [entrypoint](doc/README.md)
 - **infra** - all infrastructure artifacts
 - **test** - all tests 
+
+## Notice
+⚠️ **This repository is mirrored from the university's GitLab, so it only contains the code and does not include the issues, milestones, pipeline, or other features.** ⚠️
